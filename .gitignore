@@ -1,0 +1,10 @@
+# Node / Next.js / TypeScript
+node_modules/
+.next/
+.env
+*.log
+*.lock
+dist/
+coverage/
+.DS_Store
+.vscode/
