@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const pool = require("../config/db");
 const { authenticateToken } = require("../middleware/auth");
+const { sendVerificationEmail, sendPasswordResetEmail } = require("../utils/email");
 
 const router = express.Router();
 
@@ -17,20 +18,20 @@ router.post("/signup", [
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-  
+
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    
+
     const { email, password, name, role } = req.body;
-    
+
     // Check if email exists
     const userCheck = await client.query("SELECT id FROM users WHERE email = $1", [email]);
     if (userCheck.rows.length > 0) {
       await client.query('ROLLBACK');
       return res.status(400).json({ error: "Email already registered" });
     }
-    
+
     // Create user
     const hashedPassword = await bcryptjs.hash(password, 10);
     const result = await client.query(
@@ -40,7 +41,7 @@ router.post("/signup", [
       [email, hashedPassword, name, role]
     );
     const user = result.rows[0];
-    
+
     // Create profile based on role with safe defaults
     if (role === 'client') {
       await client.query(
@@ -55,7 +56,7 @@ router.post("/signup", [
         [user.id]
       );
     }
-    
+
     // Generate verification token
     const token = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
@@ -63,12 +64,18 @@ router.post("/signup", [
       "INSERT INTO email_verifications (user_id, token, expires_at, created_at) VALUES ($1,$2,$3,NOW())",
       [user.id, token, expires]
     );
-    
+
     await client.query('COMMIT');
-    
-    // TODO: send email with link: /auth/verify-email?token=...
-    console.log(`Verification token for ${email}: ${token}`); // For testing (fixed syntax)
-    
+
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, token, name);
+      console.log(`[auth] Verification email sent to ${email}`);
+    } catch (emailErr) {
+      console.error("[auth] Failed to send verification email:", emailErr.message);
+      // Don't fail signup if email fails - user can request resend
+    }
+
     res.status(201).json({
       message: "Signup successful. Please verify your email.",
       user: {
@@ -151,9 +158,13 @@ router.post("/send-verification", authenticateToken, async (req, res) => {
       "INSERT INTO email_verifications (user_id, token, expires_at) VALUES ($1,$2,$3)",
       [req.user.id, token, expires]
     );
+    // Send verification email
+    try {
+      await sendVerificationEmail(req.user.email, token, req.user.name);
+    } catch (emailErr) {
+      console.error("[auth] Failed to send verification email:", emailErr.message);
+    }
 
-    // TODO: send email with link: /auth/verify-email?token=...
-    
     res.json({ message: "Verification email sent" });
   } catch (err) {
     console.error("[auth] Send verification error:", err);
@@ -185,22 +196,33 @@ router.get("/verify-email", async (req, res) => {
 router.post("/request-reset", [body("email").isEmail()], async (req, res) => {
   try {
     const { email } = req.body;
-    const userResult = await pool.query("SELECT id FROM users WHERE email=$1", [email]);
+    console.log(`[auth] Password reset requested for: ${email}`);
+
+    const userResult = await pool.query("SELECT id, name FROM users WHERE email=$1", [email]);
     if (userResult.rows.length === 0) {
+      console.log(`[auth] No user found for email: ${email}`);
       return res.json({ message: "If this email exists, a reset link was sent" });
     }
 
+    const user = userResult.rows[0];
+    console.log(`[auth] Found user: ${user.name} (id: ${user.id})`);
+
     const token = crypto.randomBytes(32).toString("hex");
-    const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 min
+    const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour (was 15 min)
 
     await pool.query(
       "INSERT INTO password_resets (user_id, token, expires_at) VALUES ($1,$2,$3)",
-      [userResult.rows[0].id, token, expires]
+      [user.id, token, expires]
     );
+    console.log(`[auth] Reset token created, sending email...`);
 
-    // TODO: send email with link: /auth/reset-password?token=...
-    
-
+    // Send password reset email
+    try {
+      await sendPasswordResetEmail(email, token, user.name);
+      console.log(`[auth] Password reset email sent to ${email}`);
+    } catch (emailErr) {
+      console.error("[auth] Failed to send password reset email:", emailErr);
+    }
     res.json({ message: "If this email exists, a reset link was sent" });
   } catch (err) {
     console.error("[auth] Request reset error:", err);

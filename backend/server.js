@@ -22,6 +22,8 @@ const freelancerRoutes = require("./routes/freelancers");
 const ratingRoutes = require("./routes/ratings");
 const notificationRoutes = require("./routes/notifications");
 const clientRoutes = require("./routes/clients");
+const walletRoutes = require("./routes/wallet");
+const adminRoutes = require("./routes/admin");
 
 // Mount routes
 app.use("/api/auth", authRoutes);
@@ -34,6 +36,8 @@ app.use("/api/freelancers", freelancerRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/ratings", ratingRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/wallet", walletRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

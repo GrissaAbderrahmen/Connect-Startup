@@ -9,6 +9,12 @@ import {
 } from '@/types';
 
 export const proposalsAPI = {
+  // GET /api/proposals/:id - Get single proposal with details
+  getById: async (proposalId: number): Promise<{ data: Proposal }> => {
+    const response = await apiClient.get<{ data: Proposal }>(`/proposals/${proposalId}`);
+    return response.data;
+  },
+
   // POST /api/proposals/public - Submit public proposal to project
   createPublic: async (data: CreatePublicProposalData): Promise<{ data: Proposal }> => {
     const response = await apiClient.post<{ data: Proposal }>('/proposals/public', data);

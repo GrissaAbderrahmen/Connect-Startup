@@ -1,4 +1,5 @@
 // components/contracts/ContractDetail.tsx
+import { Link } from 'react-router-dom';
 import { Contract } from '@/types';
 import { Card } from '@/components/common/Card';
 import { Badge } from '@/components/common/Badge';
@@ -8,6 +9,7 @@ import { ContractStatus } from './ContractStatus';
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
 import { contractsAPI } from '@/services/api/contracts';
+import { MessageSquare, User } from 'lucide-react';
 
 interface ContractDetailProps {
   contract: Contract;
@@ -18,7 +20,17 @@ export const ContractDetail = ({ contract, onUpdate }: ContractDetailProps) => {
   const { user } = useAuth();
   const [isCompleting, setIsCompleting] = useState(false);
   const isClient = user?.id === contract.client_id;
+  const isFreelancer = user?.id === contract.freelancer_id;
   const canComplete = isClient && contract.status === 'active';
+
+  // Get the other party's ID for messaging
+  const getOtherPartyId = () => {
+    if (isClient) return contract.freelancer_id;
+    if (isFreelancer) return contract.client_id;
+    return null;
+  };
+
+  const otherPartyId = getOtherPartyId();
 
   const handleComplete = async () => {
     if (!confirm('Mark this contract as completed?')) return;
@@ -60,18 +72,39 @@ export const ContractDetail = ({ contract, onUpdate }: ContractDetailProps) => {
             </div>
           </div>
 
-          {canComplete && (
-            <div className="pt-4 border-t border-neutral-200">
+          {/* Action Buttons */}
+          <div className="pt-4 border-t border-neutral-200 flex flex-wrap gap-3">
+            {/* Message Button - Always visible */}
+            {otherPartyId && (
+              <Link to={`/messages/${otherPartyId}`}>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4" />
+                  Message {isClient ? 'Freelancer' : 'Client'}
+                </Button>
+              </Link>
+            )}
+
+            {/* View Profile Button (for clients viewing freelancer) */}
+            {isClient && contract.freelancer_id && (
+              <Link to={`/freelancers/${contract.freelancer_id}`}>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  View Profile
+                </Button>
+              </Link>
+            )}
+
+            {/* Complete Contract Button */}
+            {canComplete && (
               <Button
                 onClick={handleComplete}
                 isLoading={isCompleting}
                 variant="secondary"
-                className="w-full"
               >
-                Mark Contract as Completed
+                Mark as Completed
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </Card>
 
@@ -118,12 +151,14 @@ export const ContractDetail = ({ contract, onUpdate }: ContractDetailProps) => {
 
         {/* Parties Info */}
         <Card>
-          <h3 className="text-lg font-semibold text-neutral-900 mb-4">Parties</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-neutral-900">
+              {isClient ? 'Freelancer' : 'Client'}
+            </h3>
+          </div>
           <div className="space-y-3">
             <div>
-              <p className="text-sm text-neutral-600">
-                {isClient ? 'Freelancer' : 'Client'}
-              </p>
+              <p className="text-sm text-neutral-600">Name</p>
               <p className="text-lg font-semibold text-neutral-900">
                 {contract.other_user_name}
               </p>
@@ -132,6 +167,15 @@ export const ContractDetail = ({ contract, onUpdate }: ContractDetailProps) => {
               <p className="text-sm text-neutral-600">Email</p>
               <p className="text-neutral-900">{contract.other_user_email}</p>
             </div>
+            {/* Message button */}
+            {otherPartyId && (
+              <Link to={`/messages/${otherPartyId}`} className="block pt-2">
+                <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                  <MessageSquare className="w-4 h-4" />
+                  Send Message
+                </Button>
+              </Link>
+            )}
           </div>
         </Card>
       </div>

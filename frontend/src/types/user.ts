@@ -1,6 +1,6 @@
 // types/user.ts
 
-export type UserRole = 'client' | 'freelancer';
+export type UserRole = 'client' | 'freelancer' | 'admin';
 
 export interface User {
   id: number;

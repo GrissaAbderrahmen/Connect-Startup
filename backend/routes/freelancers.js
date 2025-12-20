@@ -130,32 +130,6 @@ router.get("/search", authenticateToken, async (req, res) => {
   }
 });
 
-
-// Get freelancer profile by ID (must be last to avoid conflicts)
-router.get("/:id", authenticateToken, async (req, res) => {
-  try {
-    const result = await pool.query(
-      `SELECT u.id, u.name, u.email, f.bio, f.skills, f.portfolio_url, f.hourly_rate,
-              AVG(r.rating) AS average_rating, COUNT(r.id) AS total_reviews
-       FROM users u
-       LEFT JOIN freelancer_profiles f ON u.id = f.user_id
-       LEFT JOIN ratings r ON u.id = r.freelancer_id
-       WHERE u.id = $1 AND u.role = 'freelancer'
-       GROUP BY u.id, f.bio, f.skills, f.portfolio_url, f.hourly_rate`,
-      [req.params.id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Freelancer not found" });
-    }
-
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error("[v0] Get freelancer error:", err);
-    res.status(500).json({ error: "Failed to fetch freelancer" });
-  }
-});
-
 // Update freelancer profile (freelancers only)
 router.put("/profile", authenticateToken, async (req, res) => {
   try {
@@ -191,5 +165,89 @@ router.put("/profile", authenticateToken, async (req, res) => {
   }
 });
 
+// Get current freelancer profile
+router.get("/profile", authenticateToken, async (req, res) => {
+  try {
+    // Only freelancers can view their own profile via this endpoint
+    if (req.user.role !== "freelancer") {
+      return res.status(403).json({ error: "Only freelancers can view their profile" });
+    }
+
+    const result = await pool.query(
+      `SELECT u.id, u.name, u.email, f.bio, f.skills, f.hourly_rate, f.portfolio_url,
+              AVG(r.rating) AS average_rating, COUNT(r.id) AS total_reviews
+       FROM users u
+       LEFT JOIN freelancer_profiles f ON u.id = f.user_id
+       LEFT JOIN ratings r ON u.id = r.freelancer_id
+       WHERE u.id = $1
+       GROUP BY u.id, f.bio, f.skills, f.hourly_rate, f.portfolio_url`,
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Profile not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("[v0] Get freelancer profile error:", err);
+    res.status(500).json({ error: "Failed to fetch profile" });
+  }
+});
+
+// Get freelancer reviews by ID
+router.get("/:id/reviews", authenticateToken, async (req, res) => {
+  try {
+    const freelancerId = parseInt(req.params.id, 10);
+    if (isNaN(freelancerId)) {
+      return res.status(400).json({ error: "Invalid freelancer ID" });
+    }
+
+    const result = await pool.query(
+      `SELECT r.id, r.rating, r.review_text, r.created_at, u.name as client_name
+       FROM ratings r
+       JOIN users u ON r.client_id = u.id
+       WHERE r.freelancer_id = $1
+       ORDER BY r.created_at DESC`,
+      [freelancerId]
+    );
+
+    res.json({ data: result.rows });
+  } catch (err) {
+    console.error("[freelancers] Get reviews error:", err);
+    res.status(500).json({ error: "Failed to fetch reviews" });
+  }
+});
+
+// Get freelancer profile by ID (must be last to avoid conflicts)
+router.get("/:id", authenticateToken, async (req, res) => {
+  try {
+    // Validate that id is a valid integer
+    const freelancerId = parseInt(req.params.id, 10);
+    if (isNaN(freelancerId)) {
+      return res.status(400).json({ error: "Invalid freelancer ID" });
+    }
+
+    const result = await pool.query(
+      `SELECT u.id, u.name, u.email, f.bio, f.skills, f.portfolio_url, f.hourly_rate,
+              AVG(r.rating) AS average_rating, COUNT(r.id) AS total_reviews
+       FROM users u
+       LEFT JOIN freelancer_profiles f ON u.id = f.user_id
+       LEFT JOIN ratings r ON u.id = r.freelancer_id
+       WHERE u.id = $1 AND u.role = 'freelancer'
+       GROUP BY u.id, f.bio, f.skills, f.portfolio_url, f.hourly_rate`,
+      [freelancerId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Freelancer not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("[v0] Get freelancer error:", err);
+    res.status(500).json({ error: "Failed to fetch freelancer" });
+  }
+});
 
 module.exports = router;

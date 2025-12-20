@@ -9,17 +9,24 @@ export const useEscrow = (contractId: number) => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchEscrow = async () => {
-    if (!contractId) return;
-    
+    if (!contractId) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
-      const response = await escrowAPI.getByContract(contractId);
-      // Get the first (and usually only) escrow transaction
-      setEscrow(response.data[0] || null);
+      const data = await escrowAPI.getByContract(contractId);
+      setEscrow(data);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to fetch escrow');
+      // 404 is expected if no escrow exists yet
+      if (err.response?.status === 404) {
+        setEscrow(null);
+      } else {
+        setError(err.response?.data?.error || 'Failed to fetch escrow');
+      }
     } finally {
       setIsLoading(false);
     }

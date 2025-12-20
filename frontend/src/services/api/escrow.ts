@@ -3,19 +3,16 @@ import apiClient from './client';
 import { EscrowTransaction } from '@/types';
 
 export const escrowAPI = {
-  // GET /api/escrow/contract/:contract_id - Get escrow for contract
-  getByContract: async (contractId: number): Promise<{ data: EscrowTransaction[] }> => {
-    const response = await apiClient.get<{ data: EscrowTransaction[] }>(
-      `/escrow/contract/${contractId}`
-    );
+  // GET /api/escrow/my-escrows - Get all escrows for current user
+  getMyEscrows: async (): Promise<{ data: EscrowTransaction[] }> => {
+    const response = await apiClient.get<{ data: EscrowTransaction[] }>('/escrow/my-escrows');
     return response.data;
   },
 
-  // POST /api/escrow/deposit - Deposit escrow
-  deposit: async (data: { contract_id: number; amount: number }): Promise<{ message: string; escrow_id: number }> => {
-    const response = await apiClient.post<{ message: string; escrow_id: number }>(
-      '/escrow/deposit',
-      data
+  // GET /api/escrow/contract/:contract_id - Get escrow for contract
+  getByContract: async (contractId: number): Promise<EscrowTransaction> => {
+    const response = await apiClient.get<EscrowTransaction>(
+      `/escrow/contract/${contractId}`
     );
     return response.data;
   },

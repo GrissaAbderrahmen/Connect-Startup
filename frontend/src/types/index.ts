@@ -4,6 +4,10 @@ export * from './project';
 export * from './proposal';
 export * from './contract';
 export * from './api';
+export * from './message';
+export * from './notification';
+export * from './freelancer';
+export * from './escrow';
 
 // Explicitly re-export to ensure they're available
 export type { CreateProjectData, ProjectFilters } from './project';
@@ -11,12 +15,12 @@ export type { CreatePublicProposalData, CreateDirectProposalData } from './propo
 export type { PaginationParams, PaginatedResponse } from './api';
 
 // Re-export individual types that were in combined files
-export type EscrowStatus = 
-  | 'pending_payment' 
-  | 'payment_received' 
-  | 'work_completed' 
-  | 'funds_released' 
-  | 'disputed' 
+export type EscrowStatus =
+  | 'pending_payment'
+  | 'payment_received'
+  | 'work_completed'
+  | 'funds_released'
+  | 'disputed'
   | 'refunded';
 
 export interface EscrowTransaction {
@@ -48,13 +52,13 @@ export interface SendMessageData {
   project_id?: number;
 }
 
-export type NotificationType = 
-  | 'message' 
-  | 'proposal' 
+export type NotificationType =
+  | 'message'
+  | 'proposal'
   | 'public_proposal'
   | 'direct_proposal'
-  | 'contract' 
-  | 'escrow' 
+  | 'contract'
+  | 'escrow'
   | 'rating';
 
 export interface Notification {

@@ -1,8 +1,14 @@
 // routes/AppRoutes.tsx
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PublicLayout } from '@/components/layout/PublicLayout';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { SignupPage } from '@/pages/auth/SignupPage';
+import { VerifyEmailPage } from '@/pages/auth/VerifyEmailPage';
+import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage';
+import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
+import { HomePage } from '@/pages/HomePage';
 import { ProjectsPage } from '@/pages/projects/ProjectsPage';
 import { ProjectDetailPage } from '@/pages/projects/ProjectDetailPage';
 import { CreateProjectPage } from '@/pages/projects/CreateProjectPage';
@@ -13,63 +19,42 @@ import { SubmitProposalPage } from '@/pages/proposals/SubmitProposalPage';
 import { ProjectProposalsPage } from '@/pages/proposals/ProjectProposalsPage';
 import { MyContractsPage } from '@/pages/contracts/MyContractsPage';
 import { ContractDetailPage } from '@/pages/contracts/ContractDetailPage';
+import { ClientDashboard } from '@/pages/dashboard/ClientDashboard';
+import { FreelancerDashboard } from '@/pages/dashboard/FreelancerDashboard';
+import { MessagesPage } from '@/pages/messages/MessagesPage';
+import { ConversationPage } from '@/pages/messages/ConversationPage';
+import { FreelancerProfilePage } from '@/pages/freelancers/FreelancerProfilePage';
+import { MyFreelancerProfilePage } from '@/pages/freelancers/MyFreelancerProfilePage';
+import { BrowseFreelancersPage } from '@/pages/freelancers/BrowseFreelancersPage';
+import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
+import { WalletPage } from '@/pages/wallet/WalletPage';
+import { SettingsPage } from '@/pages/settings/SettingsPage';
+import { PaymentsPage } from '@/pages/payments/PaymentsPage';
+import { ReviewsPage } from '@/pages/reviews/ReviewsPage';
+import { AdminDashboard } from '@/pages/admin/AdminDashboard';
+import { AdminWithdrawalsPage } from '@/pages/admin/AdminWithdrawalsPage';
+import { AdminUsersPage } from '@/pages/admin/AdminUsersPage';
+import { AdminDisputesPage } from '@/pages/admin/AdminDisputesPage';
+import { NotFoundPage } from '@/pages/NotFoundPage';
 import { useAuth } from '@/context/AuthContext';
 
-// Temporary Dashboard Component (we'll build this later)
+// Dashboard selector based on user role
 const DashboardPage = () => {
-  const { user, logout } = useAuth();
-  
-  return (
-    <div className="min-h-screen bg-neutral-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold mb-4">Welcome, {user?.name}!</h1>
-          <p className="text-neutral-600 mb-4">
-            Role: <span className="font-medium">{user?.role}</span>
-          </p>
-          <p className="text-neutral-600 mb-6">
-            Email Verified: <span className="font-medium">{user?.is_verified ? 'Yes' : 'No'}</span>
-          </p>
-          <div className="flex gap-4">
-            <button
-              onClick={() => window.location.href = '/projects'}
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-            >
-              Browse Projects
-            </button>
-            {user?.role === 'client' && (
-              <button
-                onClick={() => window.location.href = '/my-projects'}
-                className="px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700"
-              >
-                My Projects
-              </button>
-            )}
-            {user?.role === 'freelancer' && (
-              <button
-                onClick={() => window.location.href = '/proposals/my-proposals'}
-                className="px-4 py-2 bg-secondary-600 text-white rounded-lg hover:bg-secondary-700"
-              >
-                My Proposals
-              </button>
-            )}
-            <button
-              onClick={() => window.location.href = '/contracts'}
-              className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
-            >
-              My Contracts
-            </button>
-            <button
-              onClick={logout}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const { user } = useAuth();
+
+  if (user?.role === 'admin') {
+    return <AdminDashboard />;
+  }
+
+  if (user?.role === 'client') {
+    return <ClientDashboard />;
+  }
+
+  if (user?.role === 'freelancer') {
+    return <FreelancerDashboard />;
+  }
+
+  return <ClientDashboard />;
 };
 
 export const AppRoutes = () => {
@@ -78,21 +63,51 @@ export const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route 
-        path="/login" 
-        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} 
+      <Route
+        path="/"
+        element={
+          isAuthenticated ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <PublicLayout>
+              <HomePage />
+            </PublicLayout>
+          )
+        }
       />
-      <Route 
-        path="/signup" 
-        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <SignupPage />} 
+      <Route
+        path="/login"
+        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+      />
+      <Route
+        path="/signup"
+        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <SignupPage />}
+      />
+      <Route
+        path="/verify-email"
+        element={<VerifyEmailPage />}
+      />
+      <Route
+        path="/reset-password"
+        element={<ResetPasswordPage />}
+      />
+      <Route
+        path="/forgot-password"
+        element={<ForgotPasswordPage />}
+      />
+      <Route
+        path="/forgot_password"
+        element={<ForgotPasswordPage />}
       />
 
-      {/* Protected Routes */}
+      {/* Protected Routes with Dashboard Layout */}
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <DashboardPage />
+            <DashboardLayout>
+              <DashboardPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -102,7 +117,9 @@ export const AppRoutes = () => {
         path="/projects"
         element={
           <ProtectedRoute>
-            <ProjectsPage />
+            <DashboardLayout>
+              <ProjectsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -110,7 +127,9 @@ export const AppRoutes = () => {
         path="/projects/create"
         element={
           <ProtectedRoute allowedRoles={['client']}>
-            <CreateProjectPage />
+            <DashboardLayout>
+              <CreateProjectPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -118,7 +137,9 @@ export const AppRoutes = () => {
         path="/projects/:id"
         element={
           <ProtectedRoute>
-            <ProjectDetailPage />
+            <DashboardLayout>
+              <ProjectDetailPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -126,7 +147,9 @@ export const AppRoutes = () => {
         path="/my-projects"
         element={
           <ProtectedRoute allowedRoles={['client']}>
-            <MyProjectsPage />
+            <DashboardLayout>
+              <MyProjectsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -136,7 +159,9 @@ export const AppRoutes = () => {
         path="/proposals/my-proposals"
         element={
           <ProtectedRoute allowedRoles={['freelancer']}>
-            <MyProposalsPage />
+            <DashboardLayout>
+              <MyProposalsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -144,7 +169,9 @@ export const AppRoutes = () => {
         path="/proposals/:id"
         element={
           <ProtectedRoute>
-            <ProposalDetailPage />
+            <DashboardLayout>
+              <ProposalDetailPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -152,7 +179,9 @@ export const AppRoutes = () => {
         path="/projects/:id/propose"
         element={
           <ProtectedRoute allowedRoles={['freelancer']}>
-            <SubmitProposalPage />
+            <DashboardLayout>
+              <SubmitProposalPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -160,7 +189,9 @@ export const AppRoutes = () => {
         path="/projects/:projectId/proposals"
         element={
           <ProtectedRoute allowedRoles={['client']}>
-            <ProjectProposalsPage />
+            <DashboardLayout>
+              <ProjectProposalsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -170,7 +201,9 @@ export const AppRoutes = () => {
         path="/contracts"
         element={
           <ProtectedRoute>
-            <MyContractsPage />
+            <DashboardLayout>
+              <MyContractsPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
@@ -178,19 +211,188 @@ export const AppRoutes = () => {
         path="/contracts/:id"
         element={
           <ProtectedRoute>
-            <ContractDetailPage />
+            <DashboardLayout>
+              <ContractDetailPage />
+            </DashboardLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* Redirect root to appropriate page */}
-      <Route 
-        path="/" 
-        element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} 
+      {/* Messages Routes */}
+      <Route
+        path="/messages"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <MessagesPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/messages/:userId"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <ConversationPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Freelancer Routes */}
+      <Route
+        path="/freelancers"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <BrowseFreelancersPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/freelancers/:id"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <FreelancerProfilePage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute allowedRoles={['freelancer']}>
+            <DashboardLayout>
+              <MyFreelancerProfilePage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile/me"
+        element={
+          <ProtectedRoute allowedRoles={['freelancer']}>
+            <DashboardLayout>
+              <MyFreelancerProfilePage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Notifications */}
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <NotificationsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Wallet - Freelancers only */}
+      <Route
+        path="/wallet"
+        element={
+          <ProtectedRoute allowedRoles={['freelancer']}>
+            <DashboardLayout>
+              <WalletPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Payments (for clients) */}
+      <Route
+        path="/payments"
+        element={
+          <ProtectedRoute allowedRoles={['client']}>
+            <DashboardLayout>
+              <PaymentsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Reviews (for freelancers) */}
+      <Route
+        path="/reviews"
+        element={
+          <ProtectedRoute allowedRoles={['freelancer']}>
+            <DashboardLayout>
+              <ReviewsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Settings */}
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <SettingsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin Routes */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+              <AdminDashboard />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/withdrawals"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+              <AdminWithdrawalsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+              <AdminUsersPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/disputes"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+              <AdminDisputesPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
       />
 
       {/* 404 Not Found */}
-      <Route path="*" element={<div className="text-center mt-20">404 - Page Not Found</div>} />
+      <Route
+        path="*"
+        element={
+          <PublicLayout showFooter={false}>
+            <NotFoundPage />
+          </PublicLayout>
+        }
+      />
     </Routes>
   );
 };

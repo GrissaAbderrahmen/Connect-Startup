@@ -151,7 +151,7 @@ router.get("/my-proposals", authenticateToken, async (req, res) => {
       [req.user.id, limit, offset]
     );
 
-    res.json({ 
+    res.json({
       data: result.rows,
       pagination: {
         page,
@@ -197,7 +197,7 @@ router.get("/my-projects", authenticateToken, async (req, res) => {
       [req.user.id, limit, offset]
     );
 
-    res.json({ 
+    res.json({
       data: result.rows,
       pagination: {
         page,
@@ -351,6 +351,47 @@ router.put("/:proposal_id/:action", authenticateToken, async (req, res) => {
     return res.status(500).json({ error: "Failed to process proposal" });
   } finally {
     client.release();
+  }
+});
+
+// ---------------- GET SINGLE PROPOSAL WITH DETAILS ----------------
+router.get("/:proposal_id", authenticateToken, async (req, res) => {
+  try {
+    const proposalId = parseInt(req.params.proposal_id, 10);
+    if (isNaN(proposalId)) {
+      return res.status(400).json({ error: "Invalid proposal ID" });
+    }
+
+    const result = await pool.query(
+      `SELECT p.id, p.project_id, p.freelancer_id, p.client_id, p.proposal_type, 
+              p.proposal_text, p.proposed_price, p.delivery_time, p.start_date, p.end_date, 
+              p.status, p.created_at,
+              u.name AS freelancer_name, u.email AS freelancer_email,
+              c.name AS client_name, c.email AS client_email,
+              pr.title AS project_title, pr.description AS project_description, pr.budget AS project_budget
+       FROM proposals p
+       JOIN users u ON p.freelancer_id = u.id
+       JOIN users c ON p.client_id = c.id
+       LEFT JOIN projects pr ON p.project_id = pr.id
+       WHERE p.id = $1`,
+      [proposalId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Proposal not found" });
+    }
+
+    const proposal = result.rows[0];
+
+    // Check if user has permission to view this proposal
+    if (req.user.id !== proposal.freelancer_id && req.user.id !== proposal.client_id) {
+      return res.status(403).json({ error: "You don't have permission to view this proposal" });
+    }
+
+    res.json({ data: proposal });
+  } catch (err) {
+    console.error("[proposals] Get single proposal error:", err);
+    res.status(500).json({ error: "Failed to fetch proposal" });
   }
 });
 
