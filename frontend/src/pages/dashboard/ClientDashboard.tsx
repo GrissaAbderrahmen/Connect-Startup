@@ -10,8 +10,7 @@ import {
     Users,
     ArrowRight,
     Plus,
-    Clock,
-    TrendingUp
+    Clock
 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';

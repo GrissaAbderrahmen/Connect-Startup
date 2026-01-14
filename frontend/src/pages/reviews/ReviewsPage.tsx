@@ -8,7 +8,6 @@ import {
     Star,
     User,
     Briefcase,
-    TrendingUp,
     MessageSquare
 } from 'lucide-react';
 

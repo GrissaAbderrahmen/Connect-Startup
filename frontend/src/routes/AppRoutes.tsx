@@ -27,14 +27,10 @@ import { FreelancerProfilePage } from '@/pages/freelancers/FreelancerProfilePage
 import { MyFreelancerProfilePage } from '@/pages/freelancers/MyFreelancerProfilePage';
 import { BrowseFreelancersPage } from '@/pages/freelancers/BrowseFreelancersPage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
-import { WalletPage } from '@/pages/wallet/WalletPage';
 import { SettingsPage } from '@/pages/settings/SettingsPage';
-import { PaymentsPage } from '@/pages/payments/PaymentsPage';
 import { ReviewsPage } from '@/pages/reviews/ReviewsPage';
 import { AdminDashboard } from '@/pages/admin/AdminDashboard';
-import { AdminWithdrawalsPage } from '@/pages/admin/AdminWithdrawalsPage';
 import { AdminUsersPage } from '@/pages/admin/AdminUsersPage';
-import { AdminDisputesPage } from '@/pages/admin/AdminDisputesPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { useAuth } from '@/context/AuthContext';
 
@@ -294,29 +290,11 @@ export const AppRoutes = () => {
         }
       />
 
-      {/* Wallet - Freelancers only */}
-      <Route
-        path="/wallet"
-        element={
-          <ProtectedRoute allowedRoles={['freelancer']}>
-            <DashboardLayout>
-              <WalletPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+      {/* Wallet - DISABLED FOR BETA */}
+      {/* Route removed - payment features disabled */}
 
-      {/* Payments (for clients) */}
-      <Route
-        path="/payments"
-        element={
-          <ProtectedRoute allowedRoles={['client']}>
-            <DashboardLayout>
-              <PaymentsPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+      {/* Payments - DISABLED FOR BETA */}
+      {/* Route removed - payment features disabled */}
 
       {/* Reviews (for freelancers) */}
       <Route
@@ -353,16 +331,8 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/admin/withdrawals"
-        element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <DashboardLayout>
-              <AdminWithdrawalsPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+      {/* Admin Withdrawals - DISABLED FOR BETA */}
+      {/* Route removed - payment features disabled */}
       <Route
         path="/admin/users"
         element={
@@ -373,16 +343,8 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/admin/disputes"
-        element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <DashboardLayout>
-              <AdminDisputesPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+      {/* Admin Disputes - DISABLED FOR BETA */}
+      {/* Route removed - payment features disabled */}
 
       {/* 404 Not Found */}
       <Route

@@ -8,7 +8,6 @@ import {
     User,
     Bell,
     Shield,
-    Moon,
     Check
 } from 'lucide-react';
 
@@ -80,8 +79,8 @@ export const SettingsPage = () => {
                         <button
                             onClick={() => setLanguage('fr')}
                             className={`p-4 rounded-lg border-2 transition-all ${language === 'fr'
-                                    ? 'border-primary-500 bg-primary-50'
-                                    : 'border-neutral-200 hover:border-neutral-300'
+                                ? 'border-primary-500 bg-primary-50'
+                                : 'border-neutral-200 hover:border-neutral-300'
                                 }`}
                         >
                             <span className="text-2xl block mb-1">🇫🇷</span>
@@ -94,8 +93,8 @@ export const SettingsPage = () => {
                         <button
                             onClick={() => setLanguage('ar')}
                             className={`p-4 rounded-lg border-2 transition-all ${language === 'ar'
-                                    ? 'border-primary-500 bg-primary-50'
-                                    : 'border-neutral-200 hover:border-neutral-300'
+                                ? 'border-primary-500 bg-primary-50'
+                                : 'border-neutral-200 hover:border-neutral-300'
                                 }`}
                         >
                             <span className="text-2xl block mb-1">🇹🇳</span>
@@ -108,8 +107,8 @@ export const SettingsPage = () => {
                         <button
                             onClick={() => setLanguage('en')}
                             className={`p-4 rounded-lg border-2 transition-all ${language === 'en'
-                                    ? 'border-primary-500 bg-primary-50'
-                                    : 'border-neutral-200 hover:border-neutral-300'
+                                ? 'border-primary-500 bg-primary-50'
+                                : 'border-neutral-200 hover:border-neutral-300'
                                 }`}
                         >
                             <span className="text-2xl block mb-1">🇬🇧</span>
@@ -149,13 +148,13 @@ export const SettingsPage = () => {
                                         [key]: !prev[key as keyof typeof notifications]
                                     }))}
                                     className={`w-12 h-6 rounded-full transition-colors relative ${notifications[key as keyof typeof notifications]
-                                            ? 'bg-primary-500'
-                                            : 'bg-neutral-300'
+                                        ? 'bg-primary-500'
+                                        : 'bg-neutral-300'
                                         }`}
                                 >
                                     <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${notifications[key as keyof typeof notifications]
-                                            ? 'translate-x-7'
-                                            : 'translate-x-1'
+                                        ? 'translate-x-7'
+                                        : 'translate-x-1'
                                         }`} />
                                 </button>
                             </label>

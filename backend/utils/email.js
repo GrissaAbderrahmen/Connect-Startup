@@ -18,9 +18,9 @@ async function sendVerificationEmail(to, token, userName) {
   const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || '"Connect.tn" <noreply@connect.tn>',
+    from: process.env.EMAIL_FROM || '"Connect" <noreply@connect-platform.com>',
     to: to,
-    subject: "Verify your Connect.tn account",
+    subject: "Verify your Connect account",
     html: `
       <!DOCTYPE html>
       <html>
@@ -31,13 +31,13 @@ async function sendVerificationEmail(to, token, userName) {
       <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
         <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
           <div style="background: linear-gradient(135deg, #14b8a6, #10b981); padding: 30px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Connect.tn</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px;">Connect</h1>
             <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0;">Tunisia's Trusted Freelance Platform</p>
           </div>
           <div style="padding: 30px;">
             <h2 style="color: #333; margin-top: 0;">Welcome${userName ? ', ' + userName : ''}! 🎉</h2>
             <p style="color: #555; line-height: 1.6;">
-              Thanks for joining Connect.tn! Please verify your email address to activate your account and start connecting with clients or freelancers.
+              Thanks for joining Connect! Please verify your email address to activate your account and start connecting with clients or freelancers.
             </p>
             <div style="text-align: center; margin: 30px 0;">
               <a href="${verificationUrl}" 
@@ -71,9 +71,9 @@ async function sendPasswordResetEmail(to, token, userName) {
   const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || '"Connect.tn" <noreply@connect.tn>',
+    from: process.env.EMAIL_FROM || '"Connect" <noreply@connect-platform.com>',
     to: to,
-    subject: "Reset your Connect.tn password",
+    subject: "Reset your Connect password",
     html: `
       <!DOCTYPE html>
       <html>
@@ -84,7 +84,7 @@ async function sendPasswordResetEmail(to, token, userName) {
       <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
         <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
           <div style="background: linear-gradient(135deg, #14b8a6, #10b981); padding: 30px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Connect.tn</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px;">Connect</h1>
           </div>
           <div style="padding: 30px;">
             <h2 style="color: #333; margin-top: 0;">Password Reset Request</h2>

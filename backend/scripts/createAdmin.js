@@ -23,10 +23,10 @@ try {
                 email_verified = true,
                 updated_at = NOW()
             RETURNING id, name, email, role
-        `, ['Platform Admin', 'admin@connect.tn', hashedPassword]);
+        `, ['Platform Admin', 'admin@connect-platform.com', hashedPassword]);
 
     console.log('✅ Admin user created successfully!');
-    console.log('   Email: admin@connect.tn');
+    console.log('   Email: admin@connect-platform.com');
     console.log('   Password: Admin123!');
     console.log('   User:', result.rows[0]);
 

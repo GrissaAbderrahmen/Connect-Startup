@@ -4,6 +4,20 @@ const pool = require('../config/db');
 
 const router = express.Router();
 
+// Feature flag check middleware
+const paymentsEnabled = (req, res, next) => {
+  if (process.env.ENABLE_PAYMENTS !== 'true') {
+    return res.status(503).json({
+      error: 'Payment features are currently disabled',
+      message: 'This feature will be available soon'
+    });
+  }
+  next();
+};
+
+// Apply to all escrow routes
+router.use(paymentsEnabled);
+
 // Get all escrows for current user (client or freelancer)
 router.get('/my-escrows', authenticateToken, async (req, res) => {
   try {

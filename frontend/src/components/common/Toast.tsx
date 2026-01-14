@@ -1,5 +1,5 @@
 // components/common/Toast.tsx
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 

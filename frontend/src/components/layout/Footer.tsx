@@ -35,10 +35,10 @@ export const Footer = () => {
     };
 
     const socialLinks = [
-        { icon: Facebook, href: 'https://facebook.com/connect.tn', label: 'Facebook' },
-        { icon: Twitter, href: 'https://twitter.com/connect_tn', label: 'Twitter' },
-        { icon: Instagram, href: 'https://instagram.com/connect.tn', label: 'Instagram' },
-        { icon: Linkedin, href: 'https://linkedin.com/company/connect-tn', label: 'LinkedIn' },
+        { icon: Facebook, href: 'https://facebook.com/connectplatform', label: 'Facebook' },
+        { icon: Twitter, href: 'https://twitter.com/connectplatform', label: 'Twitter' },
+        { icon: Instagram, href: 'https://instagram.com/connectplatform', label: 'Instagram' },
+        { icon: Linkedin, href: 'https://linkedin.com/company/connect-platform', label: 'LinkedIn' },
     ];
 
     return (
@@ -70,8 +70,8 @@ export const Footer = () => {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Mail className="w-4 h-4 text-primary-500" />
-                                <a href="mailto:contact@connect.tn" className="hover:text-primary-400 transition-colors">
-                                    contact@connect.tn
+                                <a href="mailto:contact@connect-platform.com" className="hover:text-primary-400 transition-colors">
+                                    contact@connect-platform.com
                                 </a>
                             </div>
                             <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export const Footer = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-sm text-neutral-500">
-                            © {currentYear} Connect.tn. All rights reserved.
+                            © {currentYear} Connect. All rights reserved.
                         </p>
 
                         {/* Social Links */}

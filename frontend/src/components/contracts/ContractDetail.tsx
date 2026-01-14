@@ -2,7 +2,6 @@
 import { Link } from 'react-router-dom';
 import { Contract } from '@/types';
 import { Card } from '@/components/common/Card';
-import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 import { ContractStatus } from './ContractStatus';

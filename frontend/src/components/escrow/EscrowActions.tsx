@@ -19,10 +19,16 @@ interface EscrowActionsProps {
     onUpdate?: () => void;
 }
 
-export const EscrowActions = ({ escrow, contractId, onUpdate }: EscrowActionsProps) => {
+export const EscrowActions = ({ escrow, onUpdate }: EscrowActionsProps) => {
     const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Feature flag: hide escrow actions when payments are disabled
+    const paymentsEnabled = import.meta.env.VITE_ENABLE_PAYMENTS === 'true';
+    if (!paymentsEnabled) {
+        return null;
+    }
 
     const isClient = user?.id === escrow.client_id;
     const isFreelancer = user?.id === escrow.freelancer_id;

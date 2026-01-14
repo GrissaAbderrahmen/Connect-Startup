@@ -141,7 +141,6 @@ export const Header = () => {
                 ...baseItems,
                 { label: 'My Proposals', path: '/proposals/my-proposals', icon: FileText },
                 { label: 'Contracts', path: '/contracts', icon: FileText },
-                { label: 'Wallet', path: '/wallet', icon: FileText },
                 { label: 'Messages', path: '/messages', icon: MessageSquare },
             ];
         }

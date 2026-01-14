@@ -10,7 +10,6 @@ import {
     FileText,
     Wallet,
     AlertTriangle,
-    TrendingUp,
     Clock,
     CheckCircle,
     ArrowRight

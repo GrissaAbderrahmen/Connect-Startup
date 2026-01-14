@@ -12,7 +12,6 @@ import {
     Clock,
     CheckCircle,
     Star,
-    Eye,
     DollarSign
 } from 'lucide-react';
 import { Button } from '@/components/common/Button';

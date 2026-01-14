@@ -8,7 +8,7 @@ import { Proposal } from '@/types';
 export const ProjectProposalsPage = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-  const { proposals, isLoading, error, refetch } = useProjectProposals(Number(projectId));
+  const { proposals, isLoading, error } = useProjectProposals(Number(projectId));
 
   const handleProposalClick = (proposal: Proposal) => {
     navigate(`/proposals/${proposal.id}`);
@@ -17,9 +17,9 @@ export const ProjectProposalsPage = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <Button 
-          variant="outline" 
-          onClick={() => navigate(`/projects/${projectId}`)} 
+        <Button
+          variant="outline"
+          onClick={() => navigate(`/projects/${projectId}`)}
           className="mb-6"
         >
           ← Back to Project

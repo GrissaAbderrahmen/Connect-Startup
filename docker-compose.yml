@@ -1,0 +1,67 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: connect-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-connect}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-connect_secret}
+      POSTGRES_DB: ${DB_NAME:-connect}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/migrations:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-connect} -d ${DB_NAME:-connect}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: connect-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-connect}
+      DB_PASSWORD: ${DB_PASSWORD:-connect_secret}
+      DB_NAME: ${DB_NAME:-connect}
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      ENABLE_PAYMENTS: ${ENABLE_PAYMENTS:-false}
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+        VITE_APP_NAME: ${VITE_APP_NAME:-Connect}
+        VITE_ENABLE_PAYMENTS: ${ENABLE_PAYMENTS:-false}
+    container_name: connect-frontend
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

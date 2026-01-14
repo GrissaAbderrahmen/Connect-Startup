@@ -6,7 +6,7 @@ import { Button } from '@/components/common/Button';
 import { Spinner } from '@/components/common/Spinner';
 import { Badge } from '@/components/common/Badge';
 import { useAuth } from '@/context/AuthContext';
-import { formatCurrency, formatDate } from '@/utils/formatters';
+import { formatDate } from '@/utils/formatters';
 import {
     Wallet as WalletIcon,
     TrendingUp,
@@ -166,8 +166,8 @@ export const WalletPage = () => {
                     <button
                         onClick={() => setActiveTab('transactions')}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'transactions'
-                                ? 'bg-primary-500 text-white'
-                                : 'text-neutral-600 hover:bg-neutral-100'
+                            ? 'bg-primary-500 text-white'
+                            : 'text-neutral-600 hover:bg-neutral-100'
                             }`}
                     >
                         Transaction History
@@ -175,8 +175,8 @@ export const WalletPage = () => {
                     <button
                         onClick={() => setActiveTab('withdrawals')}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'withdrawals'
-                                ? 'bg-primary-500 text-white'
-                                : 'text-neutral-600 hover:bg-neutral-100'
+                            ? 'bg-primary-500 text-white'
+                            : 'text-neutral-600 hover:bg-neutral-100'
                             }`}
                     >
                         Withdrawal Requests
@@ -184,8 +184,8 @@ export const WalletPage = () => {
                     <button
                         onClick={() => setActiveTab('withdraw')}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'withdraw'
-                                ? 'bg-primary-500 text-white'
-                                : 'text-neutral-600 hover:bg-neutral-100'
+                            ? 'bg-primary-500 text-white'
+                            : 'text-neutral-600 hover:bg-neutral-100'
                             }`}
                     >
                         Make Withdrawal
@@ -207,8 +207,8 @@ export const WalletPage = () => {
                                     <div key={tx.id} className="py-4 flex items-center justify-between">
                                         <div className="flex items-center gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.type === 'credit'
-                                                    ? 'bg-green-100'
-                                                    : 'bg-red-100'
+                                                ? 'bg-green-100'
+                                                : 'bg-red-100'
                                                 }`}>
                                                 {tx.type === 'credit'
                                                     ? <ArrowDownCircle className="w-5 h-5 text-green-600" />

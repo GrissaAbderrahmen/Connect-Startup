@@ -42,6 +42,12 @@ const getStatusColor = (status: string): string => {
 };
 
 export const EscrowStatus = ({ escrow, isLoading }: EscrowStatusProps) => {
+    // Feature flag: hide escrow status when payments are disabled
+    const paymentsEnabled = import.meta.env.VITE_ENABLE_PAYMENTS === 'true';
+    if (!paymentsEnabled) {
+        return null;
+    }
+
     if (isLoading) {
         return (
             <Card>

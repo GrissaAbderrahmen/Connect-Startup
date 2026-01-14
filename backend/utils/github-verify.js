@@ -8,7 +8,7 @@
  * 4. Recent activity (not a dormant account)
  * 5. README presence (profile quality)
  * 
- * To integrate into Connect.tn:
+ * To integrate into Connect:
  * - Create /api/freelancers/verify-github endpoint
  * - Store results in freelancer_profiles
  * - Display verification badge on frontend

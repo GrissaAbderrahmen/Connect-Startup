@@ -1,4 +1,4 @@
--- Create Admin User for Connect.tn Platform
+-- Create Admin User for Connect Platform
 -- Run this SQL in your PostgreSQL database to create the admin account
 
 -- Password: Admin123! (hashed with bcrypt)
@@ -7,7 +7,7 @@
 INSERT INTO users (name, email, password_hash, role, email_verified, created_at, updated_at)
 VALUES (
   'Platform Admin',
-  'admin@connect.tn',
+  'admin@connect-platform.com',
   '$2b$10$N7HxJGnKVELQqt8JfMzQh.7w3cKq5JnH8F0xKxB/M0c6dX4ZM5hWi',
   'admin',
   true,
@@ -20,4 +20,4 @@ ON CONFLICT (email) DO UPDATE SET
   updated_at = NOW();
 
 -- Verify the admin user was created
-SELECT id, name, email, role, email_verified FROM users WHERE email = 'admin@connect.tn';
+SELECT id, name, email, role, email_verified FROM users WHERE email = 'admin@connect-platform.com';

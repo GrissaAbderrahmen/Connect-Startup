@@ -1,4 +1,4 @@
-# Khdemni POC - Complete Setup Guide
+# Connect - Complete Setup Guide
 
 ## Overview
 This is a production-grade freelance marketplace POC built with:
@@ -26,17 +26,17 @@ This is a production-grade freelance marketplace POC built with:
 psql -U postgres
 
 # Create database
-CREATE DATABASE khdemni_poc;
+CREATE DATABASE connect;
 
 # Connect to the new database
-\c khdemni_poc
+\c connect
 \`\`\`
 
 ### 2. Run Schema
 
 \`\`\`bash
 # Exit psql with \q, then run:
-psql -U postgres -d khdemni_poc -f backend/database/schema.sql
+psql -U postgres -d connect -f backend/database/schema.sql
 \`\`\`
 
 This creates:
@@ -73,7 +73,7 @@ DB_USER=postgres
 DB_PASSWORD=your_postgres_password
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=khdemni_poc
+DB_NAME=connect
 JWT_SECRET=your_super_secret_key_here_change_in_production
 PORT=5000
 NODE_ENV=development

@@ -29,7 +29,7 @@ export const BrowseFreelancersPage = () => {
         limit: 12,
     });
 
-    const { freelancers, isLoading, error, pagination, refetch } = useFreelancers(filters);
+    const { freelancers, isLoading, error, pagination } = useFreelancers(filters);
 
     const categories = [
         'All Categories',

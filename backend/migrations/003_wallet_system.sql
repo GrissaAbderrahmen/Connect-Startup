@@ -1,5 +1,5 @@
 -- ============================================
--- Wallet System Migration for Connect.tn
+-- Wallet System Migration for Connect
 -- Adds freelancer wallet and withdrawal support
 -- Safe to run multiple times (uses IF NOT EXISTS)
 -- ============================================

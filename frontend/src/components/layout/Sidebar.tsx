@@ -10,7 +10,6 @@ import {
     Users,
     Settings,
     User,
-    CreditCard,
     ChevronLeft,
     ChevronRight,
     FolderOpen,
@@ -47,9 +46,7 @@ export const Sidebar = () => {
         if (user?.role === 'admin') {
             return [
                 { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-                { label: 'Withdrawals', path: '/admin/withdrawals', icon: CreditCard },
                 { label: 'Users', path: '/admin/users', icon: Users },
-                { label: 'Disputes', path: '/admin/disputes', icon: FileText },
             ];
         }
 
@@ -62,7 +59,6 @@ export const Sidebar = () => {
                 { label: 'Find Freelancers', path: '/freelancers', icon: Users },
                 { label: 'Messages', path: '/messages', icon: MessageSquare },
                 { label: 'Notifications', path: '/notifications', icon: Bell },
-                { label: 'Payments', path: '/payments', icon: CreditCard },
             ];
         }
 
@@ -76,7 +72,6 @@ export const Sidebar = () => {
                 { label: 'Notifications', path: '/notifications', icon: Bell },
                 { label: 'My Profile', path: '/profile', icon: User },
                 { label: 'Reviews', path: '/reviews', icon: Star },
-                { label: 'Wallet', path: '/wallet', icon: CreditCard },
             ];
         }
 

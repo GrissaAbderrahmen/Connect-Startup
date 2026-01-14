@@ -52,7 +52,7 @@ export const useNotifications = (params?: PaginationParams) => {
 
     const deleteNotification = useCallback(async (notificationId: number) => {
         try {
-            await notificationsAPI.delete(notificationId);
+            // Note: delete endpoint not implemented yet, just remove from local state
             setNotifications(prev => prev.filter(n => n.id !== notificationId));
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to delete notification');
@@ -85,7 +85,7 @@ export const useUnreadNotificationCount = () => {
     const fetchCount = useCallback(async () => {
         try {
             const response = await notificationsAPI.getUnreadCount();
-            setCount(response.count);
+            setCount(response.unread_count);
         } catch (err) {
             console.error('Failed to fetch unread count:', err);
         } finally {

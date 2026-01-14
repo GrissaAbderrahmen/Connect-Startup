@@ -1,6 +1,6 @@
 // pages/messages/ConversationPage.tsx
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Send, Paperclip, Check, CheckCheck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/common/Button';
@@ -11,7 +11,6 @@ import apiClient from '@/services/api/client';
 
 export const ConversationPage = () => {
     const { userId } = useParams();
-    const navigate = useNavigate();
     const { user } = useAuth();
     const recipientId = userId ? parseInt(userId) : null;
     const [recipient, setRecipient] = useState<{ id: number; name: string; email: string } | null>(null);
@@ -42,7 +41,7 @@ export const ConversationPage = () => {
             } catch {
                 // If not a freelancer, try to get from users
                 try {
-                    const response = await apiClient.get(`/clients/profile`);
+                    await apiClient.get(`/clients/profile`);
                     // Fallback - just show placeholder
                     setRecipient({
                         id: recipientId,
