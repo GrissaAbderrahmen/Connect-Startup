@@ -1,14 +1,18 @@
 const nodemailer = require("nodemailer");
 
 // Create SMTP transporter using Brevo
+const emailPort = parseInt(process.env.EMAIL_PORT) || 587;
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || "smtp-relay.brevo.com",
-  port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: false, // true for 465, false for 587
+  port: emailPort,
+  secure: emailPort === 465, // true for 465, false for 587
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
 });
 
 /**
