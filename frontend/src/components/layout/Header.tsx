@@ -155,8 +155,14 @@ export const Header = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-                    <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2">
-                        <img src="/logo.jpg" alt="Connect" className="h-10" />
+                    <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-3">
+                        <div className="flex items-center">
+                            <span className="text-2xl font-bold tracking-tight">
+                                <span className="text-primary-500">c</span>
+                                <span className="text-primary-400">o</span>
+                                <span className="text-primary-500">nnect</span>
+                            </span>
+                        </div>
                     </Link>
 
                     {/* Desktop Navigation */}

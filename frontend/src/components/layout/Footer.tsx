@@ -49,18 +49,17 @@ export const Footer = () => {
                     {/* Brand Section */}
                     <div className="lg:col-span-2">
                         <Link to="/" className="flex items-center gap-2 mb-4">
-                            <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-xl">C</span>
-                            </div>
-                            <span className="text-xl font-bold">Connect</span>
+                            <span className="text-2xl font-bold tracking-tight">
+                                <span className="text-primary-400">c</span>
+                                <span className="text-primary-300">o</span>
+                                <span className="text-primary-400">nnect</span>
+                            </span>
                         </Link>
-                        <p className="text-neutral-400 text-sm mb-4 max-w-xs">
+                        <p className="text-neutral-400 text-sm mb-2 max-w-xs">
                             Tunisia's trusted freelance platform. Connect with verified freelancers
                             and pay securely with escrow protection.
                         </p>
-                        <p className="text-primary-400 text-sm font-medium mb-6">
-                            Built for Trust
-                        </p>
+                        <p className="text-primary-400 font-semibold text-sm mb-6">Built for Trust</p>
 
                         {/* Contact Info */}
                         <div className="space-y-2 text-sm text-neutral-400">
