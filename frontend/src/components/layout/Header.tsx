@@ -156,10 +156,7 @@ export const Header = () => {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-xl">C</span>
-                        </div>
-                        <span className="text-xl font-bold text-neutral-900">Connect</span>
+                        <img src="/logo.jpg" alt="Connect" className="h-10" />
                     </Link>
 
                     {/* Desktop Navigation */}
