@@ -10,7 +10,7 @@ import { UserRole } from '@/types';
 export const SignupForm = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,7 +18,7 @@ export const SignupForm = () => {
     confirmPassword: '',
     role: 'freelancer' as UserRole,
   });
-  
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,7 +51,7 @@ export const SignupForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -77,7 +77,7 @@ export const SignupForm = () => {
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white rounded-lg shadow-md p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {errors.general && (
             <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
@@ -126,31 +126,41 @@ export const SignupForm = () => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
               I am a...
             </label>
-            <div className="flex gap-4">
-              <label className="flex items-center cursor-pointer">
+            <div className="grid grid-cols-2 gap-3">
+              <label
+                className={`flex items-center justify-center px-4 py-4 min-h-[52px] rounded-lg border-2 cursor-pointer transition-all duration-200 ${formData.role === 'freelancer'
+                    ? 'border-primary-500 bg-primary-50 text-primary-700'
+                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                  } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
                 <input
                   type="radio"
                   value="freelancer"
                   checked={formData.role === 'freelancer'}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                  className="mr-2"
+                  className="sr-only"
                   disabled={isLoading}
                 />
-                <span>Freelancer</span>
+                <span className="font-medium">Freelancer</span>
               </label>
-              <label className="flex items-center cursor-pointer">
+              <label
+                className={`flex items-center justify-center px-4 py-4 min-h-[52px] rounded-lg border-2 cursor-pointer transition-all duration-200 ${formData.role === 'client'
+                    ? 'border-primary-500 bg-primary-50 text-primary-700'
+                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                  } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
                 <input
                   type="radio"
                   value="client"
                   checked={formData.role === 'client'}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                  className="mr-2"
+                  className="sr-only"
                   disabled={isLoading}
                 />
-                <span>Client</span>
+                <span className="font-medium">Client</span>
               </label>
             </div>
           </div>

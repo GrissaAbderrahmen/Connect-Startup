@@ -2,6 +2,7 @@
 import { ReactNode } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { MobileNav } from './MobileNav';
 
 interface DashboardLayoutProps {
     children: ReactNode;
@@ -16,10 +17,14 @@ export const DashboardLayout = ({ children, showSidebar = true }: DashboardLayou
             <div className="flex">
                 {showSidebar && <Sidebar />}
 
-                <main className={`flex-1 ${showSidebar ? 'p-6' : ''}`}>
+                {/* Added pb-20 lg:pb-6 to clear mobile bottom nav */}
+                <main className={`flex-1 ${showSidebar ? 'p-4 pb-20 lg:p-6 lg:pb-6' : 'pb-20 lg:pb-0'}`}>
                     {children}
                 </main>
             </div>
+
+            {/* Mobile bottom navigation - only visible on mobile */}
+            <MobileNav />
         </div>
     );
 };

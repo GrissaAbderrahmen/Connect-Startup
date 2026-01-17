@@ -20,3 +20,16 @@ body {
 #root {
   min-height: 100vh;
 }
+
+/* Safe area for iPhone notch - used by mobile bottom nav */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Ensure touch targets are at least 44px */
+@layer utilities {
+  .min-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

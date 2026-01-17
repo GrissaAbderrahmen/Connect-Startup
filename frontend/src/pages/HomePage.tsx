@@ -313,18 +313,18 @@ export const HomePage = () => {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
                         {categories.map((category) => (
                             <Link
                                 key={category.name}
                                 to={`/freelancers?category=${encodeURIComponent(category.name)}`}
-                                className="group p-6 bg-white rounded-xl border border-neutral-200 hover:border-primary-300 hover:shadow-teal text-center transition-all duration-300"
+                                className="group p-4 sm:p-6 min-h-[100px] bg-white rounded-xl border border-neutral-200 hover:border-primary-300 hover:shadow-teal text-center transition-all duration-300 flex flex-col items-center justify-center"
                             >
-                                <category.icon className="w-8 h-8 text-primary-500 mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                                <h3 className="font-medium text-neutral-900 text-sm mb-1">
+                                <category.icon className="w-7 h-7 sm:w-8 sm:h-8 text-primary-500 mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+                                <h3 className="font-medium text-neutral-900 text-xs sm:text-sm mb-0.5 sm:mb-1 leading-tight">
                                     {category.name}
                                 </h3>
-                                <p className="text-xs text-neutral-500">{category.count}</p>
+                                <p className="text-xs text-neutral-500 hidden sm:block">{category.count}</p>
                             </Link>
                         ))}
                     </div>
