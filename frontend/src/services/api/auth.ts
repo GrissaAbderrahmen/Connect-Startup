@@ -52,6 +52,23 @@ export const authAPI = {
     return response.data;
   },
 
+  // POST /api/auth/change-password (logged in user)
+  changePassword: async (current_password: string, new_password: string): Promise<{ message: string }> => {
+    const response = await apiClient.post<{ message: string }>('/auth/change-password', {
+      current_password,
+      new_password,
+    });
+    return response.data;
+  },
+
+  // DELETE /api/auth/delete-account
+  deleteAccount: async (password: string): Promise<{ message: string }> => {
+    const response = await apiClient.delete<{ message: string }>('/auth/delete-account', {
+      data: { password },
+    });
+    return response.data;
+  },
+
   // POST /api/auth/dev/force-verify (Development only)
   forceVerify: async (): Promise<{ message: string }> => {
     const response = await apiClient.post<{ message: string }>('/auth/dev/force-verify');

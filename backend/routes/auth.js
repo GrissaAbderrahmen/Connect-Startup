@@ -266,6 +266,101 @@ router.post("/dev/force-verify", authenticateToken, async (req, res) => {
   }
 });
 
+// ---------------- CHANGE PASSWORD (logged in user) ----------------
+router.post("/change-password", authenticateToken, [
+  body("current_password").notEmpty().withMessage("Current password is required"),
+  body("new_password").isLength({ min: 8 }).withMessage("New password must be at least 8 characters"),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const { current_password, new_password } = req.body;
+
+    // Get current password hash
+    const userResult = await pool.query(
+      "SELECT password_hash FROM users WHERE id = $1",
+      [req.user.id]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Verify current password
+    const passwordMatch = await bcryptjs.compare(current_password, userResult.rows[0].password_hash);
+    if (!passwordMatch) {
+      return res.status(400).json({ error: "Current password is incorrect" });
+    }
+
+    // Hash and save new password
+    const newHash = await bcryptjs.hash(new_password, 10);
+    await pool.query(
+      "UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2",
+      [newHash, req.user.id]
+    );
+
+    console.log(`[auth] Password changed for user ${req.user.id}`);
+    res.json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.error("[auth] Change password error:", err);
+    res.status(500).json({ error: "Failed to change password" });
+  }
+});
+
+// ---------------- DELETE ACCOUNT ----------------
+router.delete("/delete-account", authenticateToken, [
+  body("password").notEmpty().withMessage("Password is required to confirm deletion"),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const client = await pool.connect();
+  try {
+    const { password } = req.body;
+
+    // Verify password
+    const userResult = await client.query(
+      "SELECT password_hash FROM users WHERE id = $1",
+      [req.user.id]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const passwordMatch = await bcryptjs.compare(password, userResult.rows[0].password_hash);
+    if (!passwordMatch) {
+      return res.status(400).json({ error: "Password is incorrect" });
+    }
+
+    await client.query('BEGIN');
+
+    // Delete user data (cascade will handle related tables, but let's be explicit)
+    await client.query("DELETE FROM email_verifications WHERE user_id = $1", [req.user.id]);
+    await client.query("DELETE FROM password_resets WHERE user_id = $1", [req.user.id]);
+    await client.query("DELETE FROM notifications WHERE user_id = $1", [req.user.id]);
+    await client.query("DELETE FROM freelancer_profiles WHERE user_id = $1", [req.user.id]);
+    await client.query("DELETE FROM client_profiles WHERE user_id = $1", [req.user.id]);
+    await client.query("DELETE FROM users WHERE id = $1", [req.user.id]);
+
+    await client.query('COMMIT');
+
+    console.log(`[auth] Account deleted for user ${req.user.id}`);
+    res.json({ message: "Account deleted successfully" });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error("[auth] Delete account error:", err);
+    res.status(500).json({ error: "Failed to delete account" });
+  } finally {
+    client.release();
+  }
+});
+
 
 
 module.exports = router;

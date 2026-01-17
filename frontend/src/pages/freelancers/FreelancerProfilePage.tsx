@@ -226,14 +226,26 @@ export const FreelancerProfilePage = () => {
                         </div>
                     </Card>
 
-                    {/* Social Links */}
-                    {freelancer.social_links && Object.keys(freelancer.social_links).length > 0 && (
+                    {/* Social Links & Portfolio */}
+                    {(freelancer.portfolio_url || (freelancer.social_links && Object.keys(freelancer.social_links).length > 0)) && (
                         <Card>
                             <h3 className="font-semibold text-neutral-900 mb-4">Connect</h3>
                             <div className="space-y-3">
-                                {freelancer.social_links.github && (
+                                {freelancer.portfolio_url && (
                                     <a
-                                        href={freelancer.social_links.github}
+                                        href={freelancer.portfolio_url.startsWith('http') ? freelancer.portfolio_url : `https://${freelancer.portfolio_url}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3 text-neutral-600 hover:text-primary-600 transition-colors"
+                                    >
+                                        <Briefcase className="w-5 h-5" />
+                                        <span>Portfolio</span>
+                                        <ExternalLink className="w-4 h-4 ml-auto" />
+                                    </a>
+                                )}
+                                {freelancer.social_links?.github && (
+                                    <a
+                                        href={freelancer.social_links.github.startsWith('http') ? freelancer.social_links.github : `https://${freelancer.social_links.github}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-3 text-neutral-600 hover:text-primary-600 transition-colors"
@@ -243,9 +255,9 @@ export const FreelancerProfilePage = () => {
                                         <ExternalLink className="w-4 h-4 ml-auto" />
                                     </a>
                                 )}
-                                {freelancer.social_links.linkedin && (
+                                {freelancer.social_links?.linkedin && (
                                     <a
-                                        href={freelancer.social_links.linkedin}
+                                        href={freelancer.social_links.linkedin.startsWith('http') ? freelancer.social_links.linkedin : `https://${freelancer.social_links.linkedin}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-3 text-neutral-600 hover:text-primary-600 transition-colors"
@@ -255,9 +267,9 @@ export const FreelancerProfilePage = () => {
                                         <ExternalLink className="w-4 h-4 ml-auto" />
                                     </a>
                                 )}
-                                {freelancer.social_links.website && (
+                                {freelancer.social_links?.website && (
                                     <a
-                                        href={freelancer.social_links.website}
+                                        href={freelancer.social_links.website.startsWith('http') ? freelancer.social_links.website : `https://${freelancer.social_links.website}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-3 text-neutral-600 hover:text-primary-600 transition-colors"

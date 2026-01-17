@@ -24,6 +24,7 @@ const notificationRoutes = require("./routes/notifications");
 const clientRoutes = require("./routes/clients");
 const walletRoutes = require("./routes/wallet");
 const adminRoutes = require("./routes/admin");
+const supportRoutes = require("./routes/support");
 
 // Mount routes
 app.use("/api/auth", authRoutes);
@@ -38,6 +39,7 @@ app.use("/api/ratings", ratingRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/support", supportRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

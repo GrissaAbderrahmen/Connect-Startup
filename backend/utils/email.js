@@ -145,6 +145,44 @@ async function sendPasswordResetEmail(to, token, userName) {
 }
 
 /**
+ * Send feedback email to admin
+ */
+async function sendFeedbackEmail(fromName, fromEmail, subject, message) {
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@connect-platform.com';
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
+      <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="background: linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%); padding: 25px 30px; color: #fff;">
+          <h1 style="margin: 0; font-size: 24px;">📬 New Feedback Received</h1>
+        </div>
+        <div style="padding: 30px;">
+          <div style="background: #f0fdf4; border-left: 4px solid #14b8a6; padding: 15px; margin-bottom: 20px;">
+            <strong>From:</strong> ${fromName}<br>
+            <strong>Email:</strong> ${fromEmail}<br>
+            <strong>Subject:</strong> ${subject}
+          </div>
+          <h3 style="margin-top: 0;">Message:</h3>
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap;">
+${message}
+          </div>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+          <p style="color: #999; font-size: 12px; margin: 0;">
+            This feedback was submitted through the Connect platform.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail(ADMIN_EMAIL, `[Connect Feedback] ${subject}`, htmlContent);
+}
+
+/**
  * Test the email configuration
  */
 async function testEmailConnection() {
@@ -159,5 +197,6 @@ async function testEmailConnection() {
 module.exports = {
   sendVerificationEmail,
   sendPasswordResetEmail,
+  sendFeedbackEmail,
   testEmailConnection
 };

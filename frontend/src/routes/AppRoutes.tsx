@@ -31,6 +31,7 @@ import { SettingsPage } from '@/pages/settings/SettingsPage';
 import { ReviewsPage } from '@/pages/reviews/ReviewsPage';
 import { AdminDashboard } from '@/pages/admin/AdminDashboard';
 import { AdminUsersPage } from '@/pages/admin/AdminUsersPage';
+import { FeedbackPage } from '@/pages/support/FeedbackPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { useAuth } from '@/context/AuthContext';
 
@@ -317,6 +318,16 @@ export const AppRoutes = () => {
               <SettingsPage />
             </DashboardLayout>
           </ProtectedRoute>
+        }
+      />
+
+      {/* Feedback/Support - public route */}
+      <Route
+        path="/feedback"
+        element={
+          <PublicLayout>
+            <FeedbackPage />
+          </PublicLayout>
         }
       />
 
