@@ -86,7 +86,7 @@ export const Sidebar = () => {
 
     return (
         <aside
-            className={`bg-white border-r border-neutral-200 h-[calc(100vh-64px)] sticky top-16 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'
+            className={`hidden lg:flex flex-col bg-white border-r border-neutral-200 h-[calc(100vh-64px)] sticky top-16 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'
                 }`}
         >
             <div className="flex flex-col h-full">

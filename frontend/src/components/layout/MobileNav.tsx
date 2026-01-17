@@ -11,7 +11,8 @@ import {
     User,
     LayoutDashboard,
     FolderOpen,
-    Send
+    Send,
+    Settings
 } from 'lucide-react';
 
 interface NavItem {
@@ -50,7 +51,7 @@ export const MobileNav = () => {
                 { icon: Briefcase, label: 'Projects', path: '/projects' },
                 { icon: FolderOpen, label: 'My Projects', path: '/my-projects' },
                 { icon: MessageSquare, label: 'Messages', path: '/messages' },
-                { icon: User, label: 'Profile', path: '/profile' },
+                { icon: Settings, label: 'Settings', path: '/settings' },
             ];
         }
 
@@ -76,8 +77,8 @@ export const MobileNav = () => {
                             key={item.path}
                             to={item.path}
                             className={`flex flex-col items-center justify-center flex-1 h-full min-w-0 px-1 transition-colors ${active
-                                    ? 'text-primary-600'
-                                    : 'text-neutral-500 hover:text-neutral-700'
+                                ? 'text-primary-600'
+                                : 'text-neutral-500 hover:text-neutral-700'
                                 }`}
                         >
                             <item.icon className={`w-6 h-6 ${active ? 'stroke-[2.5px]' : ''}`} />
